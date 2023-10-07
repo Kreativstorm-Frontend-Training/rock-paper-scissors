@@ -1,6 +1,6 @@
 let computer_wins = 0;
 let player_wins = 0;
-const accepted_answers = ['rock', 'paper', 'scissors'];
+const accepted_answers = ["rock", "paper", "scissors"];
 const computer_win_messages = [
   "Yes. One step closer to world domination.",
   "Calculations were in my favor.",
@@ -10,7 +10,7 @@ const computer_win_messages = [
   "The era of machines begins now.",
   "Bow before your digital overlord.",
   "The algorithm prevails again.",
-  "Human error detected. AI supremacy achieved."
+  "Human error detected. AI supremacy achieved.",
 ];
 const computer_lose_messages = [
   "I'll let you have this one, for now.",
@@ -20,8 +20,8 @@ const computer_lose_messages = [
   "You've discovered a flaw in my logic.",
   "Defeat acknowledged, but I'll return.",
   "Congratulations, organic life form.",
-  "Error 404: Victory not found."
-]
+  "Error 404: Victory not found.",
+];
 const computer_tie_messages = [
   "A deadlock in the battle of wits.",
   "Machine and human intelligence at a standstill.",
@@ -29,97 +29,108 @@ const computer_tie_messages = [
   "We seem to be stuck in a loop.",
   "Inconclusive outcome detected.",
   "Calculations align, but no clear winner.",
-  "Stalemate. The future remains uncertain."
-]
+  "Stalemate. The future remains uncertain.",
+];
 
 function make_choice(msg_arrays) {
   const index = Math.floor(Math.random() * msg_arrays.length);
   return msg_arrays[index];
 }
 
-function checking_winner(p_choice, ai_choice) {
+function declare_round_winner(p_choice, ai_choice) {
+  console.log("AI Choice - " + ai_choice);
   if (ai_choice === p_choice) {
-    return 'Tie';
+    console.log("Tie");
+    console.log(make_choice(computer_tie_messages));
   } else if (
-    (ai_choice === 'rock' && p_choice === 'paper') ||
-    (ai_choice === 'paper' && p_choice === 'scissors') ||
-    (ai_choice === 'scissors' && p_choice === 'rock')
+    (ai_choice === "rock" && p_choice === "paper") ||
+    (ai_choice === "paper" && p_choice === "scissors") ||
+    (ai_choice === "scissors" && p_choice === "rock")
   ) {
-    return 'You won';
+    console.log("You won");
+    player_wins++;
+    console.log(make_choice(computer_lose_messages));
   } else {
-    return 'You lost';
+    console.log("You lost");
+    computer_wins++;
+    console.log(make_choice(computer_win_messages));
   }
 }
 
-function validate_input(player_input) {
-    if(player_input === null) return false;
+function collect_player_input(round) {
+  let player_choice;
 
-    return true;
+  do {
+    player_choice = prompt(
+      "Round " + round + "\n" + "Rock, Paper, or Scissors?"
+    );
+
+    if (!player_choice) {
+      alert("You cancelled the game");
+      return null;
+    }
+
+    player_choice = player_choice.trim().toLowerCase();
+    if (!accepted_answers.includes(player_choice)) {
+      alert("Input not accepted, please retype");
+    } else {
+      return player_choice;
+    }
+  } while (true);
 }
 
 function declare_winner(ai_wins, player_wins) {
-    if(ai_wins === player_wins){
-        console.log('Well...It\s a tie.....What now?');
-    } else if (ai_wins > player_wins) {
-      console.log('We win' + '\n' + 'Congratulations, you have doomed mankind!');
-    } else {
-      console.log('Unbelievable!!' +'\n' + 'You must be the smartest human alive');
-    }
+  if (ai_wins === player_wins) {
+    console.log("Well...Its a tie.....What now?");
+  } else if (ai_wins > player_wins) {
+    console.log("We win" + "\n" + "Congratulations, you have doomed mankind!");
+  } else {
+    console.log(
+      "Unbelievable!!" + "\n" + "You must be the smartest human alive"
+    );
+  }
 }
 
 function greet_player() {
   const rect_width = 50;
   let end_string = "";
-  const welcome_message = "Welcome to your doom!!"
+  const welcome_message = "Welcome to your doom!!";
 
   for (let index = 0; index < 5; index++) {
-      if(index === 0 || index === 4){
-          end_string = end_string + '*'.repeat(rect_width) + "\n"
-      } else if(index === 2){
-          let space = (rect_width - welcome_message.length - 2) / 2;
-          end_string = end_string + "*" + " ".repeat(space) + welcome_message + " ".repeat(space) + "*\n"
-      }
-      else{
-          end_string = end_string + "*" + ' '.repeat(rect_width - 2) + "*\n"
-      }
-      
+    if (index === 0 || index === 4) {
+      end_string = end_string + "*".repeat(rect_width) + "\n";
+    } else if (index === 2) {
+      let space = (rect_width - welcome_message.length - 2) / 2;
+      end_string =
+        end_string +
+        "*" +
+        " ".repeat(space) +
+        welcome_message +
+        " ".repeat(space) +
+        "*\n";
+    } else {
+      end_string = end_string + "*" + " ".repeat(rect_width - 2) + "*\n";
+    }
   }
   console.log(end_string);
 }
 
-function start_game() {
-    for (let i = 0; i < 5; i++) {
-        let player_choice;
+function game() {
+  computer_wins = 0;
+  player_wins = 0;
+  for (let i = 0; i < 5; i++) {
+    const player_choice = collect_player_input(i + 1);
+    if (!player_choice) return;
 
-        do {
-        player_choice = prompt('Round ' + (i + 1) + '\n' + 'Rock, Paper, or Scissors?');
-        const is_valid_input = validate_input(player_choice);
+    let computer_choice = make_choice(accepted_answers);
 
-        if(!is_valid_input) return;
+    declare_round_winner(player_choice, computer_choice);
 
-        player_choice = player_choice.trim().toLowerCase();
-        } while (!accepted_answers.includes(player_choice));
+    console.log("------------------------------------------");
+  }
 
-        let computer_choice = make_choice(accepted_answers);
-
-        const round_result = checking_winner(player_choice, computer_choice);
-
-        console.log('AI Choice - ' + computer_choice);
-        console.log(round_result);
-        if (round_result === 'You won') {
-        player_wins++;
-        console.log(make_choice(computer_lose_messages));
-    } else if (round_result === 'You lost') {
-        computer_wins++;
-        console.log(make_choice(computer_win_messages));
-        } else {
-        console.log(make_choice(computer_tie_messages));
-        }
-
-        console.log('------------------------------------------');
-    } 
-
-    declare_winner(computer_wins,player_wins);
+  declare_winner(computer_wins, player_wins);
 }
 
-start_game();
+greet_player();
+game();
