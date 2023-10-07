@@ -89,37 +89,37 @@ function greet_player() {
 
 function start_game() {
     for (let i = 0; i < 5; i++) {
-      let player_choice;
-  
-      do {
+        let player_choice;
+
+        do {
         player_choice = prompt('Round ' + (i + 1) + '\n' + 'Rock, Paper, or Scissors?');
         const is_valid_input = validate_input(player_choice);
-  
+
         if(!is_valid_input) return;
-  
+
         player_choice = player_choice.trim().toLowerCase();
-      } while (!accepted_answers.includes(player_choice));
-  
-      let computer_choice = make_choice(accepted_answers);
-  
-      const round_result = checking_winner(player_choice, computer_choice);
-  
-      console.log('AI Choice - ' + computer_choice);
-      console.log(round_result);
-      if (round_result === 'You won') {
+        } while (!accepted_answers.includes(player_choice));
+
+        let computer_choice = make_choice(accepted_answers);
+
+        const round_result = checking_winner(player_choice, computer_choice);
+
+        console.log('AI Choice - ' + computer_choice);
+        console.log(round_result);
+        if (round_result === 'You won') {
         player_wins++;
         console.log(make_choice(computer_lose_messages));
     } else if (round_result === 'You lost') {
         computer_wins++;
         console.log(make_choice(computer_win_messages));
-      } else {
+        } else {
         console.log(make_choice(computer_tie_messages));
-      }
-  
-      console.log('------------------------------------------');
-    } 
-  
-    declare_winner(computer_wins,player_wins);
-  }
+        }
 
-  start_game();
+        console.log('------------------------------------------');
+    } 
+
+    declare_winner(computer_wins,player_wins);
+}
+
+start_game();
